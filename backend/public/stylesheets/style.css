@@ -1,0 +1,27 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    /*color: white;*/
+    /*background: black;*/
+}
+
+a {
+    color: #00B7FF;
+}
+
+#main-wrapper {
+    margin-top: 20px;
+}
+
+.mainLinkCard {
+    max-width: 500px;
+}
+
+.bg-emerald {
+    background: linear-gradient(to bottom right, #389466, #42b883);
+}
+
+/*.card {*/
+    /*background: rgba(31, 31, 35, 0.8);*/
+    /*border-radius: 8px;*/
+/*}*/

@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  backend:
+    build: ./docker/backend
+    container_name: arxiview-backend
+    ports:
+    - "80:3000"
+    tty: true
+    restart: unless-stopped
+    volumes:
+    - ./backend:/usr/src/app

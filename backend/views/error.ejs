@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include generic/head.ejs %>
+</head>
+<body>
+<% include generic/header.ejs %>
+
+<section>
+    <h1><%= message %></h1>
+    <h2><%= error.status %></h2>
+    <pre><%= error.stack %></pre>
+</section>
+
+<% include generic/footer.ejs %>
+<% include generic/scripts.ejs %>
+</body>
+</html>
