@@ -1,23 +1,18 @@
-function generateID() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
+const uid = require('uid');
 
 
 module.exports = function (objectRepository) {
     return function (req, res, next) {
         // code comes here
 
-        let id = generateID();
-        
-        while (id in Object.keys(req.session.documents)) {
-            id = generateID()
-        }
+        let guid = uid(12);
 
-        req.session.documents[id] = {
+        req.session.documents[guid] = {
+            'guid': guid,
             'link': req.body.link
         };
 
-        return res.redirect('/edit/'+id);
+        return res.redirect('/edit/'+guid);
     };
 
 };

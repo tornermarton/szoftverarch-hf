@@ -11,7 +11,7 @@ module.exports = function (objectRepository) {
             return next(err);
         }
 
-        res.tpl.link = document.link;
+        res.tpl.document = document;
 
         return next();
     };

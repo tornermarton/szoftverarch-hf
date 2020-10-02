@@ -13,7 +13,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">ArXiV link</h5>
-                                <p class="card-text">
+                                <p class="card-text mb-5">
                                     Please insert the link of the ArXiV paper in the box below and press start. The
                                     site currently supports links like: <code>https://arxiv.org/abs/1810.04805</code>
                                     and <code>https://arxiv.org/pdf/1810.04805.pdf</code>.
@@ -21,19 +21,36 @@
                                 <form class="form-row justify-content-center" method="post" action="/link/">
                                     <div class="col-12">
                                         <label class="sr-only" for="inputLink">ArXiV link</label>
-                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormInput" name="link" placeholder="https://arxiv.org/pdf/1810.04805.pdf">
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormLinkInput" name="link" placeholder="https://arxiv.org/pdf/1810.04805.pdf">
                                     </div>
                                     <div>
-                                        <button type="submit" class="btn btn-success mb-2">Start</button>
+                                        <button type="submit" class="btn btn-success mb-2 pr-4 pl-4">Start</button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Document ID</h5>
+                                <p class="card-text mb-5">
+                                    Edit a previously added document
+                                </p>
+                                <div class="form-row justify-content-center">
+                                    <div class="col-auto">
+                                        <label class="sr-only" for="inputLink">ArXiV link</label>
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormIdInput" name="document_id" placeholder="5gU6H7242kl5">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-success mb-2" onclick="editDocument()">Go</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <script src="/javascripts/index.js"></script>
         <% include generic/footer.ejs %>
         <% include generic/scripts.ejs %>
     </body>
