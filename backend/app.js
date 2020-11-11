@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const session = require("express-session");
 const path = require('path');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -22,11 +23,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../../../uploads')));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Connect to MongoDB
+const db = mongoose.connect('mongodb://mongodb:27017/arxiview', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+db.then(() => {
+    console.log('connected');
+}, error => {
+    console.log(error, 'error');
+});
 
 /**
  * Create the .tpl to allow templating
@@ -34,9 +50,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function (req, res, next) {
     res.tpl = {};
 
-    if (req.session.documents === undefined) {
-        req.session.documents = {};
-    }
+    // if (req.session.documents === undefined) {
+    //     req.session.documents = {};
+    // }
 
     return next();
 });

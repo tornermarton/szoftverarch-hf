@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT="$(realpath $(dirname "$0")/..)"
+ROOT="$(realpath $(dirname "$0")/../)"
 SCRIPTS="${ROOT}/scripts"
 
 # Export to child processes

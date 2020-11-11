@@ -9,13 +9,8 @@
 <div id="main-wrapper">
     <div class="container">
         <div class="row">
-            <div class="col">
-                <p>
-                    Document ID: <%= document.guid %>
-                </p>
-                <p>
-                    The entered link is: <a href="<%= document.link %>" target="_blank"><%= document.link %></a>
-                </p>
+            <div class="col" >
+                <iframe src="/document/<%= document._id %>/<%= mode %>/"></iframe>
             </div>
         </div>
     </div>

@@ -1,12 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const prepareDocumentMW = require('../middleware/prepareDocument');
-const loadDocumentMW = require('../middleware/loadDocument');
-
+// middleware
+const prepareDocumentMW = require('../middleware/documents/addDocument');
+const getDocumentMW = require('../middleware/documents/getDocument');
+const loadDocumentMW = require('../middleware/documents/loadDocument');
 const renderMW = require('../middleware/generic/render');
 
-const objectRepository = {};
+//models
+const documentModel = require('../models/document');
+
+const objectRepository = {
+    'documentModel': documentModel
+};
 
 /* GET home page. */
 router.get('/',
@@ -17,22 +23,23 @@ router.post('/link',
     prepareDocumentMW(objectRepository)
 );
 
-// developer only
-router.get('/edit',
+router.get('/:id/:mode/',
     function (req, res, next) {
-        res.json(req.session.documents)
-    }
+        res.tpl.mode = req.params.mode;
+        return next();
+    },
+    getDocumentMW(objectRepository),
+    renderMW(objectRepository, 'document_wrapper')
 );
 
-router.post('/edit',
+router.get('/document/:id/:mode/',
     function (req, res, next) {
-        res.redirect('/edit/' + req.body.document_id)
-    }
-);
-
-router.get('/edit/:id',
+        res.tpl.mode = req.params.mode;
+        return next();
+    },
+    getDocumentMW(objectRepository),
     loadDocumentMW(objectRepository),
-    renderMW(objectRepository, 'editor')
+    renderMW(objectRepository, 'document')
 );
 
 module.exports = router;
