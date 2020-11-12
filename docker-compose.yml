@@ -20,3 +20,14 @@ services:
     restart: unless-stopped
     volumes:
     - $MONGODB_DATA_PATH:/data/db
+  compiler:
+    build: ./docker/compiler
+    container_name: arxiview-compiler
+    hostname: arxiview-compiler
+    volumes:
+      - $UPLOADS_PATH:/home/workspace
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    tty: true
+    #network_mode: "host"

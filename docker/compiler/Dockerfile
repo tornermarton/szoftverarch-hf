@@ -20,19 +20,28 @@ RUN mkdir -p /usr/share/man/man1
 # Install all TeX and LaTeX dependencies
 RUN apt-get update && \
     apt-get install --yes -y --no-install-recommends \
+    python3 python3-pip
+
+RUN apt-get install --yes -y --no-install-recommends \
     make luatex texlive texlive-base texlive-luatex texlive-latex-extra \
-    tidy texlive-extra-utils python3-pygments python3-setuptools dvisvgm \
+    tidy texlive-extra-utils python3-pygments python3-setuptools dvisvgm
+
+RUN apt-get install --yes -y --no-install-recommends \
     texlive-plain-generic texlive-generic-recommended \
-    pandoc latexmk lmodern fonts-lmodern tex-gyre fonts-texgyre \
-    default-jre-headless zip \
+    pandoc latexmk lmodern fonts-lmodern tex-gyre fonts-texgyre
+
+RUN apt-get install --yes -y --no-install-recommends \
+    default-jre-headless zip curl \
     texlive-lang-english && \
     apt-get autoclean && apt-get --purge --yes autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV filename "sample.tex"
-# extra packages installes using apt-get
-ENV extra_packages ""
-# output directory for the HTML files
-ENV output_dir "./"
-# make4ht command to be executed
-ENV command "make4ht -ulm draft -d $output_dir $filename"
+RUN python3 --version
+
+RUN pip3 install flask
+
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+ADD scripts /home/scripts
+RUN chmod +x /home/scripts/*
+
+ENTRYPOINT ["python3", "/home/scripts/service.py"]
