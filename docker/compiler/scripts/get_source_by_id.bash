@@ -1,8 +1,4 @@
 #!/bin/bash
-echo "1"
-echo "$1"
-echo "$2"
-echo "done"
 mkdir "/home/workspace/doc_$2"
 curl "https://arxiv.org/e-print/$1"\
  -s \

@@ -10,6 +10,9 @@ app = Flask(__name__)
 
 # curl "http://localhost:5000/get_source_by_id?arxiv_id=1905.02693&generated_id=2"
 
+# a few arxiv ids to test with ( all .tar.gz files)
+# 1506.02025 1903.11027 1907.11692 1910.01765 2004.15021 1801.09847 1906.05717 1909.13163 2004.05324
+
 @app.route('/get_source_by_id')
 def get_source_by_id():
     arxiv_id = request.args.get('arxiv_id')

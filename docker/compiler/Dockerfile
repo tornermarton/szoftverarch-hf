@@ -31,7 +31,7 @@ RUN apt-get install --yes -y --no-install-recommends \
     pandoc latexmk lmodern fonts-lmodern tex-gyre fonts-texgyre
 
 RUN apt-get install --yes -y --no-install-recommends \
-    default-jre-headless zip curl \
+    default-jre-headless zip curl xz-utils dvipng \
     texlive-lang-english && \
     apt-get autoclean && apt-get --purge --yes autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
