@@ -32,7 +32,7 @@ RUN apt-get install --yes -y --no-install-recommends \
 
 RUN apt-get install --yes -y --no-install-recommends \
     default-jre-headless zip curl xz-utils dvipng \
-    texlive-lang-english && \
+    texlive-lang-english texlive-science && \
     apt-get autoclean && apt-get --purge --yes autoremove && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
