@@ -1,4 +1,5 @@
 import fileinput
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -10,7 +11,7 @@ app = Flask(__name__)
 
 # docker-compose up --build compiler
 
-# curl "http://localhost:5000/process_all?arxiv_id=1903.11027&generated_id=421"
+# curl "http://localhost:5000/process_all?arxiv_id=1903.11027&generated_id=4321"
 
 @app.route('/process_all')
 def process_all():
@@ -19,14 +20,14 @@ def process_all():
 
     _, code_get_source_by_id = get_source_by_id(arxiv_id, generated_id)
     _, code_replace_comments_before_compile = replace_comments_before_compile(generated_id)
-    _, code_compile_latex_source = compile_latex_source(generated_id)
-    print(code_get_source_by_id, code_replace_comments_before_compile, code_compile_latex_source)
+    ret, code_compile_latex_source = compile_latex_source(generated_id)
 
     code = 500
     if code_get_source_by_id == 200 and code_replace_comments_before_compile == 200 and code_compile_latex_source == 200:
         code = 200
 
-    return jsonify({ }), code
+    main_file = json.loads(ret)["main_file"]
+    return jsonify({ "main_file": main_file}), code
 
 
 # curl "http://localhost:5000/get_source_by_id?arxiv_id=1903.11027&generated_id=4"
@@ -87,7 +88,7 @@ def uncomment_files(tex_files):
         with fileinput.FileInput(filepath, inplace = True, backup = '.bak') as file:
             for line in file:
                 if is_valid_comment(line):
-                    print(line.replace("%", "commentedsectionstart"), end = '')
+                    print(line.replace("%", "\n\ncommentedsectionstart"), end = '')
                     print("commentedsectionend", end = '')
                 else:
                     print(line, end = '')
@@ -113,7 +114,6 @@ def compile_latex_source(generated_id):
             break
 
     bashCommand = "make4ht " + main_file + " -d " + path + "/compiled_output"
-    print(bashCommand)
     process = subprocess.Popen(bashCommand, cwd = path, stdout = subprocess.PIPE, stderr = subprocess.PIPE,
                                shell = True)
     output, error = process.communicate()
@@ -123,8 +123,7 @@ def compile_latex_source(generated_id):
     code = 200
     if len(error) != 0 or "finished" not in output[-10:]:
         code = 500
-    print(error, output)
-    return jsonify({ "output": output, "error": error }), code
+    return jsonify({ "output": output, "error": error, "main_file": main_file }), code
 
 
 if __name__ == '__main__':
