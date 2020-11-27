@@ -9,5 +9,9 @@
 </head>
 <body>
     <%- body %>
+    <% if (mode === "edit") { %>
+        <% include generic/scripts.ejs %>
+        <script type="text/javascript" src="/javascripts/editor.js"></script>
+    <% } %>
 </body>
 </html>

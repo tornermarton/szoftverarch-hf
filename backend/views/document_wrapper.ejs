@@ -9,8 +9,34 @@
 <div id="main-wrapper">
     <div class="container">
         <div class="row">
-            <div class="col" >
-                <iframe src="/document/<%= document._id %>/<%= mode %>/"></iframe>
+            <div class="col document_wrapper row">
+                <div class="document_wrapper_header">
+                    <form class="row justify-content-center">
+                            <div class="form-group col-md-8 col-lg-6 align-self-center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">ArXiV ID</div>
+                                    </div>
+                                    <input type="text" class="form-control" id="editorArxivId" value="<%= document.arxiv_id %>" disabled>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button" onclick="copyToClipboard(this)">Copy <i class="far fa-copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-8 col-lg-6 align-self-center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">Document ID</div>
+                                    </div>
+                                    <input type="text" class="form-control" id="editorDocumentId" value="<%= document._id %>" disabled>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button" onclick="copyToClipboard(this)">Copy <i class="far fa-copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+                <iframe src="/document/<%= document._id %>/<%= mode %>/" class="col-12 document_wrapper_content"></iframe>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fetch = require('node-fetch');
 const requireOption = require('../common').requireOption;
 
 module.exports = function (objectRepository) {
@@ -27,22 +28,55 @@ module.exports = function (objectRepository) {
                 throw err_message;
             }
 
-            newDocument.save(function (err) {
-                console.log(newDocument._id);
-                console.log(newDocument.arxiv_id);
-                if (err) {
-                    return next(err);
+            fetch("https://arxiv.org/abs/"+ newDocument.arxiv_id + "/").then(function (response) {
+                if (response.ok) {
+                    fetch(
+                        "http://compiler:5000/process_all?arxiv_id=" + newDocument.arxiv_id + "&generated_id=" + newDocument._id
+                    ).then(function (response) {
+                        if (response.ok) {
+                            newDocument.save(function (err) {
+                                console.log(newDocument._id);
+                                console.log(newDocument.arxiv_id);
+                                if (err) {
+                                    return next(err);
+                                }
+
+                                const path = '/uploads/doc_'+res.tpl.document._id+'/uncompressed/compiled_output/main.html';
+
+                                fs.readFile(path, 'utf8', (err, text) => {
+                                    text = text.replace(/commentedsectionstart/g, "<span class='commented'>");
+                                    text = text.replace(/commentedsectionend/g, "</span>");
+
+                                    const $ = cheerio.load(text);
+
+                                    $('img').each(function() {
+                                        const old_src = $(this).attr('src');
+                                        const new_src = '/doc_' + res.tpl.document._id + '/uncompressed/compiled_output/' + old_src;
+                                        $(this).attr('src', new_src);
+                                    });
+
+                                    $('link').each(function () {
+                                        const old_href = $(this).attr('href');
+                                        const new_href = '/doc_' + res.tpl.document._id + '/uncompressed/compiled_output/' + old_href;
+                                        $(this).attr('href', new_href);
+                                    });
+
+                                    $('p.indent').each(function () {
+
+                                    });
+
+                                    fs.writeFileSync(path, $.html());
+
+                                    return res.redirect('/' + newDocument._id + '/edit/');
+                                });
+                            });
+                        }
+
+                        return res.end("Something went wrong.");
+                    });
                 }
 
-                const path = '/uploads/doc_' + newDocument._id;
-
-                if (fs.existsSync(path)) {
-                    return next(new Error('Directory already exists!'));
-                }
-
-                fs.mkdirSync(path);
-
-                return res.redirect('/' + newDocument._id + '/edit/');
+                throw err_message;
             });
         } catch (err) {
             console.log(err);

@@ -1,3 +1,40 @@
-p:hover, .caption:hover, .abstract:hover{
+.selected, .document-section-content:hover{
     background: antiquewhite !important;
+}
+
+.selected.marked, .marked:hover {
+    background-color: burlywood !important;
+}
+
+.document-section-content:hover{
+    cursor: pointer;
+}
+
+.document-section-content {
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+.editor-menu {
+    position: absolute;
+    z-index: 1000;
+    top: -30px;
+    left: 50%;
+    background-color: #333333;
+    color: white;
+    display: none;
+    transform: translateX(-50%);
+    overflow: hidden;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.editor-menu-element {
+    display:inline-block;
+}
+
+.editor-menu-mark, .editor-menu-comment, .editor-menu-hide {
+    padding: 2px 5px 2px 5px;
+    cursor: pointer;
 }

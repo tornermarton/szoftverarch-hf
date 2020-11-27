@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "node ./bin/www",
     "watch": "nodemon ./start.js"
   },
   "dependencies": {
@@ -15,8 +15,9 @@
     "express": "~4.16.1",
     "express-session": "^1.17.1",
     "http-errors": "~1.6.3",
-    "mongoose": "^5.10.13",
+    "mongoose": "^5.10.16",
     "morgan": "~1.9.1",
+    "node-fetch": "^2.6.1",
     "uid": "^1.0.0"
   },
   "devDependencies": {
