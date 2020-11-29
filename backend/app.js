@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const express = require('express');
 const session = require("express-session");
 const path = require('path');
@@ -6,16 +5,21 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const admin = require('firebase-admin');
+const serviceAccount = require("./resources/firebase.json");
+const cert = require("./resources/cert.json");
 
 const indexRouter = require('./routes/index');
 
 const app = express();
 
+/**
+ * Session
+ */
 app.use(session({
-    secret: 'keyboard cat',
+    secret: cert.secret,
     resave: true,
-    rolling: true,
-    saveUninitialized: false
+    saveUninitialized: true
 }));
 
 // view engine setup
@@ -24,18 +28,21 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 
+app.use(bodyParser.urlencoded({ extended: true, limit: '100MB' }));
+app.use(cookieParser());
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../../../uploads')));
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-
-// Connect to MongoDB
+/**
+ * Connect database
+ */
 const db = mongoose.connect('mongodb://mongodb:27017/arxiview', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
 db.then(() => {
@@ -45,16 +52,11 @@ db.then(() => {
 });
 
 /**
- * Create the .tpl to allow templating
+ * Initialize firebase admin
  */
-app.use(function (req, res, next) {
-    res.tpl = {};
-
-    // if (req.session.documents === undefined) {
-    //     req.session.documents = {};
-    // }
-
-    return next();
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://arxiview.firebaseio.com"
 });
 
 app.use('/', indexRouter);

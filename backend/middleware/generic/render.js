@@ -6,11 +6,17 @@
 module.exports = function (objectRepository, viewName) {
 
     return function (req, res) {
-        //The res.tpl can be dressed up here
+        //The res.locals can be dressed up here
 
-        res.tpl.title = res.tpl.title || "ArXiView";
+        res.locals.title = res.locals.title || "ArXiView";
 
-        res.render(viewName, res.tpl);
+        if (req.session.user) {
+            res.locals.user = {
+                "name": req.session.user.name
+            };
+        }
+
+        res.render(viewName);
     };
 
 };

@@ -5,5 +5,11 @@
             <!--ArXiView-->
         <!--</a>-->
         <a class="navbar-brand" href="/">ArXiView</a>
+        <% if (locals.user) { %>
+        <div class="text-white ml-auto mr-4">
+            Signed in as: <%= user.name %>
+        </div>
+        <button class="btn btn-danger" onclick="logout()">Sign out</button>
+        <% } %>
     </nav>
 </header>

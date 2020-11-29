@@ -1,19 +1,113 @@
-mark_section = function (element) {
+// *** SELECT START ***
+function remove_selection() {
+    let selected = $(".selected");
+
+    let editor_menu_element = $(selected).parent().parent().children(".editor-menu");
+    $(selected).removeClass("selected");
+
+    $(editor_menu_element).hide();
+
+    $(selected).parent().parent().remove(editor_menu_element);
+    $('body').append(editor_menu_element);
+}
+
+function select_element(event, element) {
+    remove_selection();
+
+    let editor_menu_element = $('body').children(".editor-menu");
+    $(element).addClass("selected");
+
+    $(element).parent().parent().append(editor_menu_element);
+    $(editor_menu_element).show();
+
+    event.stopPropagation();
+}
+// *** SELECT END ***
+
+// *** MARK START ***
+function mark_section(element) {
     if ($(element).hasClass("marked")) {
         $(element).removeClass("marked");
     }
     else {
         $(element).addClass("marked");
     }
-};
+}
+// *** MARK END ***
 
-show_section = function () {
+// *** COMMENT START ***
+function textarea_on_input(element) {
+    element.style.height = "";
+    element.style.height = element.scrollHeight + "px";
+}
+
+function textarea_on_focusout(element) {
+    element.innerText = element.innerText.trim();
+    textarea_on_input(element);
+
+    if (element.innerText=== "") {
+        $(element).parent().hide();
+        $(element).parent().prev().removeClass("width-70");
+        $(element).parent().prev().addClass("width-100");
+    }
+}
+
+function add_comment(element) {
+    $(element).removeClass("width-100");
+    $(element).addClass("width-70");
+    $(element).next().show();
+    $(element).next().children(".editable-div").focus();
+}
+// *** COMMENT END ***
+
+// *** BOOKMARK START ***
+function create_bookmarks_block() {
+    $("body").prepend(`<div id="bookmarks" class="card mb-3"><div class="card-body"><h3 class="card-title">Bookmarks</h3></div></div>`);
+}
+
+function remove_bookmark(element) {
+    $(element).parents(".bookmark").remove();
+
+    if ($("#bookmarks").find(".bookmark").length === 0) {
+        $("#bookmarks").remove();
+    }
+}
+
+function add_bookmark(element) {
+    const name = window.prompt("Name: ");
+
+    let id = "bookmark-" + Date.now().toString();
+
+    if ($(element).attr('id')) {
+        id = $(element).attr('id');
+    }
+    else {
+        $(element).attr('id', id);
+    }
+
+    if ($("#bookmarks").length === 0) {
+        create_bookmarks_block();
+    }
+
+    $("#bookmarks .card-body").append(`
+        <div class="btn-group mb-2 bookmark" role="group">
+            <a class="btn btn-outline-dark" role="button" href="#${id}">
+                <i class="fas fa-bookmark mr-1"></i><span>${name}</span>
+            </a>
+            <div class="btn btn-danger" role="button" onclick="remove_bookmark(this)">X</div>
+        </div>
+    `);
+}
+// *** BOOKMARK END ***
+
+// *** HIDE START ***
+function show_section() {
     let content = this.lastChild.lastChild;
 
     this.replaceWith(content);
-};
+}
 
-hide_section = function(element) {
+function hide_section(element) {
     remove_selection();
     element = $(element).parent().parent()[0];
 
@@ -33,44 +127,17 @@ hide_section = function(element) {
 
     hidden_element.addEventListener("click", show_section);
     $(node).find(".document-section-content")[0].addEventListener("click", function(event) {select_element(event, this)});
-    $(node).find("textarea")[0].addEventListener("focusout", function() { textarea_on_focusout(this) });
-    $(node).find("textarea")[0].addEventListener("input", function() { textarea_on_input(this) });
 
     element.replaceWith(hidden_element);
-};
+}
+// *** HIDE END ***
 
-add_comment = function(element) {
-    $(element).removeClass("width-100");
-    $(element).addClass("width-70");
-    $(element).next().show();
-    $(element).next().children("textarea").focus();
-};
+function jumpToTop() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
 
-remove_selection = function() {
-    let selected = $(".selected");
-
-    let editor_menu_element = $(selected).parent().parent().children(".editor-menu");
-    $(selected).removeClass("selected");
-
-    $(editor_menu_element).hide();
-
-    $(selected).parent().parent().remove(editor_menu_element);
-    $('body').append(editor_menu_element);
-};
-
-select_element = function (event, element) {
-    remove_selection();
-
-    let editor_menu_element = $('body').children(".editor-menu");
-    $(element).addClass("selected");
-
-    $(editor_menu_element).show();
-
-    $(element).parent().parent().append(editor_menu_element);
-
-    event.stopPropagation();
-};
-
+// *** WIRE IN FUNCTIONS START ***
 $(".document-section-content").click(function (event) {
     select_element(event, this);
 });
@@ -91,26 +158,32 @@ $(".editor-menu-comment").click(function () {
     add_comment($(this).parents(".document-section").find(".document-section-content"));
 });
 
-textarea_on_focusout = function (element) {
-    element.value = element.value.trim();
-    textarea_on_input(element);
-
-    if (element.value === "") {
-        $(element).parent().hide();
-        $(element).parent().prev().removeClass("width-70");
-        $(element).parent().prev().addClass("width-100");
-    }
-};
-
-textarea_on_input = function (element) {
-    element.style.height = "";
-    element.style.height = element.scrollHeight + "px";
-};
-
-$("textarea").focusout(function () { textarea_on_focusout(this) });
-$("textarea").on("input", function() { textarea_on_input(this) });
+$(".editor-menu-bookmark").click(function () {
+    add_bookmark($(this).parents(".document-section").find(".document-section-before"));
+});
 
 $(".cite").click(function (event) {
     event.stopPropagation();
+});
+
+$("#save-button").click(function() {
+    let html = document.documentElement.outerHTML;
+
+    let docid = $('html').attr("data-document-id");
+
+    $.ajax({
+        type: "POST",
+        url: "/documents/" + docid + "/save/",
+        data: {"document_html": html},
+        dataType: "json",
+        success: function (result){
+            if (result.success) {
+                alert("Saved!");
+            }
+            else {
+                alert("Failed to save!");
+            }
+        }
+    });
 });
 

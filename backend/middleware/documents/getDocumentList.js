@@ -6,21 +6,18 @@ module.exports = function (objectRepository) {
 
     return function (req, res, next) {
 
-        DocumentModel.findById(req.params.id, function (err, doc) {
+        DocumentModel.find({ owner: req.session.user.uid}, function (err, docs) {
             if (err) {
                 return next(err);
             }
 
-            if (doc) {
-                res.locals.document = doc;
-
-                return next();
+            if (!Array.isArray(docs)) {
+                docs = [docs];
             }
 
-            const error = new Error('Cannot find document ' + req.params.id);
-            error.status = 404;
+            res.locals.documentList = docs;
 
-            return next(error);
+            return next();
         });
     };
 

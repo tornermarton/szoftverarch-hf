@@ -12,5 +12,8 @@
 
 <% include generic/footer.ejs %>
 <% include generic/scripts.ejs %>
+<% if (locals.user) { %>
+    <% include generic/auth_scripts.ejs %>
+<% } %>
 </body>
 </html>

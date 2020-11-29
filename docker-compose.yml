@@ -4,12 +4,11 @@ services:
   backend:
     build: ./docker/backend
     container_name: arxiview-backend
-    ports:
-    - "80:3000"
     tty: true
     restart: unless-stopped
     depends_on:
     - mongodb
+    - compiler
     volumes:
     - ./backend:/usr/src/app
     - $UPLOADS_PATH:/uploads
@@ -27,3 +26,14 @@ services:
       - $UPLOADS_PATH:/home/workspace
     restart: unless-stopped
     tty: true
+  nginx:
+    image: nginx:latest
+    container_name: arxiview-nginx
+    depends_on:
+      - backend
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./nginx:/etc/nginx/conf.d
+    - ./certificates:/certificates

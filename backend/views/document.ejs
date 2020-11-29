@@ -1,17 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <%- head %>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/view.css">
-    <% if (mode === "edit") { %>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/editor.css">
-    <% } %>
+    <% include generic/head.ejs %>
 </head>
 <body>
-    <%- body %>
-    <% if (mode === "edit") { %>
-        <% include generic/scripts.ejs %>
-        <script type="text/javascript" src="/javascripts/editor.js"></script>
-    <% } %>
+<% include generic/header.ejs %>
+
+<div id="main-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col document_wrapper row">
+                <div class="document_wrapper_header">
+                    <form class="row justify-content-center">
+                        <div class="form-group col-md-8 col-lg-7 align-self-center">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Document ID</div>
+                                </div>
+                                <input type="text" class="form-control" id="editorDocumentId" value="<%= document._id %>" disabled>
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="button" onclick="copyToClipboard('<%= document._id %>')">Copy</button>
+                                </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="button" onclick="openRawDocument('<%= document._id %>')">Open raw</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-8 col-lg-5 align-self-center">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">ArXiV ID</div>
+                                </div>
+                                <input type="text" class="form-control" id="editorArxivId" value="<%= document.arxiv_id %>" disabled>
+                                <div class="input-group-append">
+                                    <button class="btn btn-secondary" type="button" onclick="copyToClipboard('<%= document.arxiv_id %>')">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <iframe src="/documents/<%= document._id %>/<%= mode %>/raw" class="col-12 document_wrapper_content"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<% include generic/footer.ejs %>
+<% include generic/scripts.ejs %>
+<% include generic/auth_scripts.ejs %>
 </body>
 </html>

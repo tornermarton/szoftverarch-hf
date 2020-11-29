@@ -1,3 +1,15 @@
+body {
+    padding-top: 90px;
+}
+
+.document-section-before[id]:before{
+    display: block;
+    height: 60px;   /* equal to the header height */
+    margin-top: -60px;  /* negative margin equal to the header height */
+    visibility: hidden;
+    content: "";
+}
+
 .selected, .document-section-content:hover{
     background: antiquewhite !important;
 }
@@ -26,15 +38,27 @@
     display: none;
     transform: translateX(-50%);
     overflow: hidden;
-    padding: 5px;
     border-radius: 4px;
 }
 
 .editor-menu-element {
     display:inline-block;
+    margin-left: -4px;
+    padding: 5px 0 5px 0;
+    cursor: pointer;
 }
 
-.editor-menu-mark, .editor-menu-comment, .editor-menu-hide {
-    padding: 2px 5px 2px 5px;
-    cursor: pointer;
+.editor-menu-element:first-child {
+    margin-left: 0;
+}
+.editor-menu-element-inner {
+    padding: 0 8px 0 8px;
+}
+
+.editor-menu-element .editor-menu-element-inner {
+    border-left: 1px solid #eeeeee;
+}
+
+.editor-menu-element:first-child .editor-menu-element-inner  {
+    border-left: 0;
 }

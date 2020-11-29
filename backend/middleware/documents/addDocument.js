@@ -1,5 +1,6 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
+const cheerio = require('cheerio');
 const requireOption = require('../common').requireOption;
 
 module.exports = function (objectRepository) {
@@ -9,6 +10,9 @@ module.exports = function (objectRepository) {
     return function (req, res, next) {
         const newDocument = new DocumentModel();
         const err_message = "Invalid URL.";
+
+        newDocument.owner = req.session.user.uid;
+        newDocument.title = req.body.title;
 
         try {
             const url = new URL(req.body.link);
@@ -35,48 +39,59 @@ module.exports = function (objectRepository) {
                     ).then(function (response) {
                         if (response.ok) {
                             newDocument.save(function (err) {
-                                console.log(newDocument._id);
-                                console.log(newDocument.arxiv_id);
                                 if (err) {
                                     return next(err);
                                 }
 
-                                const path = '/uploads/doc_'+res.tpl.document._id+'/uncompressed/compiled_output/main.html';
+                                const path = '/uploads/doc_'+newDocument._id+'/uncompressed/compiled_output/main.html';
 
                                 fs.readFile(path, 'utf8', (err, text) => {
-                                    text = text.replace(/commentedsectionstart/g, "<span class='commented'>");
-                                    text = text.replace(/commentedsectionend/g, "</span>");
+                                    // text = text.replace(/<p[\r\n\s]*class="indent"[\r\n\s]*>[\r\n\s]*commentedsectionstart/g, "<p class='indent commented'>");
+                                    // text = text.replace(/<p[\r\n\s]*class="noindent"[\r\n\s]*>[\r\n\s]*commentedsectionstart/g, "<p class='noindent commented'>");
+                                    // text = text.replace(/commentedsectionend[\r\n\s]*<[\r\n\s]*\/p[\r\n\s]*>/g, "</p>");
+
+                                    text = text.replace(/commentedsectionstart/g, "</p><p class='indent commented'>");
+                                    text = text.replace(/commentedsectionend/g, "</p><p class='indent'>");
 
                                     const $ = cheerio.load(text);
 
-                                    $('img').each(function() {
-                                        const old_src = $(this).attr('src');
-                                        const new_src = '/doc_' + res.tpl.document._id + '/uncompressed/compiled_output/' + old_src;
-                                        $(this).attr('src', new_src);
+                                    $("body>p").each(function () {
+                                        if ($(this).text().trim() === "") {
+                                            $(this).remove();
+                                        }
                                     });
 
-                                    $('link').each(function () {
-                                        const old_href = $(this).attr('href');
-                                        const new_href = '/doc_' + res.tpl.document._id + '/uncompressed/compiled_output/' + old_href;
-                                        $(this).attr('href', new_href);
-                                    });
-
-                                    $('p.indent').each(function () {
-
+                                    $('body>p, figure, table').each(function () {
+                                        let $section$ = cheerio.load(
+                                            '<div class="document-section">' +
+                                                '<div class="document-section-wrapper">' +
+                                                    '<div class="document-section-before"></div>' +
+                                                    '<div class="document-section-content"></div>' +
+                                                    '<div class="document-section-comment" style="display: none">' +
+                                                        '<div class="editable-div" onfocus="textarea_on_input(this)" oninput="textarea_on_input(this)" onfocusout="textarea_on_focusout(this)"></div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>'
+                                        );
+                                        let node = $(this).clone();
+                                        $section$(".document-section-content").append(node);
+                                        $(this).replaceWith($section$.html());
                                     });
 
                                     fs.writeFileSync(path, $.html());
 
-                                    return res.redirect('/' + newDocument._id + '/edit/');
+                                    return res.redirect('/documents/' + newDocument._id + '/edit/');
                                 });
                             });
                         }
-
-                        return res.end("Something went wrong.");
+                        else {
+                            return next(new Error("Compilation failed, the requested ArXiV document is not supported. :("));
+                        }
                     });
                 }
-
-                throw err_message;
+                else {
+                    return next(new Error("The requested ArXiV document is not found."));
+                }
             });
         } catch (err) {
             console.log(err);
