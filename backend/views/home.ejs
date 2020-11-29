@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <% include generic/head.ejs %>
+    </head>
+    <body>
+        <% include generic/header.ejs %>
+
+        <div id="main-wrapper">
+            <div class="container" id="main-container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-5 align-self-center mainLinkCard">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Create document</h5>
+                                <p class="card-text mb-3">
+                                    Please insert the link of the ArXiV paper in the box below and press start. The
+                                    site currently supports links like: <code>https://arxiv.org/abs/1905.02693</code>
+                                    and <code>https://arxiv.org/pdf/1905.02693.pdf</code>.
+                                </p>
+                                <form class="form-row justify-content-center" method="post" action="/documents/add">
+                                    <div class="col-12">
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormTitleInput" name="title" placeholder="Title">
+                                    </div>
+                                    <div class="col-12">
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormLinkInput" name="link" placeholder="https://arxiv.org/abs/1905.02693">
+                                    </div>
+                                    <div>
+                                        <button type="submit" class="btn btn-success pr-4 pl-4">Start</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Edit document</h5>
+                                <p class="card-text mb-3">
+                                    Edit a previously added document
+                                </p>
+                                <div class="form-row justify-content-center mb-3">
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormEditIdInput" name="document_id" placeholder="5f903716dd646f002c285ab8">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-success mb-2" onclick="editDocument()">Go</button>
+                                    </div>
+                                </div>
+                                <p class="card-text">
+                                    <a href="/documents/">See all documents</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h5 class="card-title">View document</h5>
+                                <p class="card-text mb-3">
+                                    View a previously added document
+                                </p>
+                                <div class="form-row justify-content-center">
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormViewIdInput" name="document_id" placeholder="5f903716dd646f002c285ab8">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-success mb-2" onclick="viewDocument()">Go</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% include generic/footer.ejs %>
+        <% include generic/scripts.ejs %>
+        <% include generic/auth_scripts.ejs %>
+    </body>
+</html>

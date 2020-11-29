@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include generic/head.ejs %>
+</head>
+<body>
+<% include generic/header.ejs %>
+
+<div id="main-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col document_list_wrapper row">
+                <div class="document_list col-12">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Document ID</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Arxiv ID</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% var i = 1 %>
+                        <% documentList.forEach(function (document) { %>
+                            <tr>
+                                <th scope="row" class="align-middle"><%= i++ %></th>
+                                <td class="align-middle"><%= document._id %></td>
+                                <td class="align-middle"><%= document.title %></td>
+                                <td class="align-middle"><a href="https://arxiv.org/abs/<%= document.arxiv_id %>" target="_blank"><%= document.arxiv_id %></a></td>
+                                <td class="align-middle text-right">
+                                    <a class="btn btn-secondary" href="/documents/<%= document._id %>/view">View</a>
+                                    <a class="btn btn-success" href="/documents/<%= document._id %>/edit">Edit</a>
+                                    <button class="btn btn-danger" onclick="deleteDocument('<%= document._id %>')">Delete</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include generic/footer.ejs %>
+<% include generic/scripts.ejs %>
+<% include generic/auth_scripts.ejs %>
+</body>
+</html>

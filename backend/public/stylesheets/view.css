@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    padding: 20px;
+}
+
+p{
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+img[alt='PIC']{
+    max-width: 80%;
+    min-width: 40%;
+    height: auto;
+}
+
+*[id^='textcolor']{
+    color: inherit !important;
+}
+
+.editable-div {
+    resize: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    outline: none !important;
+    word-wrap: break-word;
+
+    /* top right bottom left */
+    border: 0 solid grey;
+    border-left-width: 5px;
+    padding-left: 10px;
+
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.commented {
+    /* top right bottom left */
+    border: 0 solid green;
+    border-left-width: 5px;
+    padding-left: 10px;
+}
+
+.document-section {
+    margin-top: 10px;
+    position: relative;
+    width: 100%;
+}
+
+.document-section-wrapper {
+    overflow: hidden;
+    width: 100%;
+    padding-right: 20px;
+    position: relative;
+}
+
+.document-section-content {
+    float: left;
+    position: relative;
+    width: 100%;
+}
+
+.width-70 {
+    width: 70%;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.document-section-comment {
+    width: 28%;
+    float: right;
+}
+
+.marked {
+    background-color: bisque !important;
+}
+
+.hidden_wrapper {
+    display: none;
+}
+
+.hidden_element {
+    padding: 5px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin: 5px 0;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    background-color: #dddddd;
+    text-align: center;
+    color: #555555;
+    font-weight: bold;
+    cursor: pointer;
+}

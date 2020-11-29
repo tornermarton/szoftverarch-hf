@@ -1,0 +1,39 @@
+version: "3.5"
+
+services:
+  backend:
+    build: ./docker/backend
+    container_name: arxiview-backend
+    tty: true
+    restart: unless-stopped
+    depends_on:
+    - mongodb
+    - compiler
+    volumes:
+    - ./backend:/usr/src/app
+    - $UPLOADS_PATH:/uploads
+  mongodb:
+    image: mongo:latest
+    container_name: arxiview-mongo
+    tty: true
+    restart: unless-stopped
+    volumes:
+    - $MONGODB_DATA_PATH:/data/db
+  compiler:
+    build: ./docker/compiler
+    container_name: arxiview-compiler
+    volumes:
+      - $UPLOADS_PATH:/home/workspace
+    restart: unless-stopped
+    tty: true
+  nginx:
+    image: nginx:latest
+    container_name: arxiview-nginx
+    depends_on:
+      - backend
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./nginx:/etc/nginx/conf.d
+    - ./certificates:/certificates

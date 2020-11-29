@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ArXiView</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<% include generic/header.ejs %>
+
+<div id="main-wrapper">
+    <div class="container" id="main-container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5 align-self-center mainLinkCard">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sign in</h5>
+                        <div class="form-row justify-content-center">
+                            <div class="">
+                                <button class="btn btn-outline-dark" role="button" style="text-transform:none" onclick=callGoogleSignIn()>
+                                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                                    Login with Google
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">View document</h5>
+                        <p class="card-text mb-5">
+                            View a previously added document
+                        </p>
+                        <div class="form-row justify-content-center">
+                            <div class="col-auto">
+                                <label class="sr-only" for="inputLink">ArXiV link</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="mainFormViewIdInput" name="document_id" placeholder="5f903716dd646f002c285ab8">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-success mb-2" onclick="viewDocument()">Go</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include generic/footer.ejs %>
+<% include generic/scripts.ejs %>
+<% include generic/auth_scripts.ejs %>
+</body>
+</html>

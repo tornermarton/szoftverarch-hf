@@ -1,0 +1,15 @@
+<header>
+    <nav class="navbar fixed-top navbar-dark bg-dark">
+        <!--<a class="navbar-brand" href="#">-->
+            <!--<img src="/favicon.ico" width="30" height="30" class="d-inline-block align-top mr-1" alt="" loading="lazy">-->
+            <!--ArXiView-->
+        <!--</a>-->
+        <a class="navbar-brand" href="/">ArXiView</a>
+        <% if (locals.user) { %>
+        <div class="text-white ml-auto mr-4">
+            Signed in as: <%= user.name %>
+        </div>
+        <button class="btn btn-danger" onclick="logout()">Sign out</button>
+        <% } %>
+    </nav>
+</header>
