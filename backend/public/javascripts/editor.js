@@ -76,20 +76,21 @@ function remove_bookmark(element) {
 function add_bookmark(element) {
     const name = window.prompt("Name: ");
 
-    let id = "bookmark-" + Date.now().toString();
+    if (name && name.trim() !== "") {
+        let id = "bookmark-" + Date.now().toString();
 
-    if ($(element).attr('id')) {
-        id = $(element).attr('id');
-    }
-    else {
-        $(element).attr('id', id);
-    }
+        if ($(element).attr('id')) {
+            id = $(element).attr('id');
+        }
+        else {
+            $(element).attr('id', id);
+        }
 
-    if ($("#bookmarks").length === 0) {
-        create_bookmarks_block();
-    }
+        if ($("#bookmarks").length === 0) {
+            create_bookmarks_block();
+        }
 
-    $("#bookmarks .card-body").append(`
+        $("#bookmarks .card-body").append(`
         <div class="btn-group mb-2 bookmark" role="group">
             <a class="btn btn-outline-dark" role="button" href="#${id}">
                 <i class="fas fa-bookmark mr-1"></i><span>${name}</span>
@@ -97,6 +98,7 @@ function add_bookmark(element) {
             <div class="btn btn-danger" role="button" onclick="remove_bookmark(this)">X</div>
         </div>
     `);
+    }
 }
 // *** BOOKMARK END ***
 
@@ -164,6 +166,10 @@ $(".editor-menu-bookmark").click(function () {
 
 $(".cite").click(function (event) {
     event.stopPropagation();
+});
+
+$(".editable-div").on("resize", function () {
+    textarea_on_input($(this));
 });
 
 $("#save-button").click(function() {
